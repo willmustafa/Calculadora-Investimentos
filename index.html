@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <!-- style and script resources -->
+    <link rel="stylesheet" href="css/styles.css" media="all">
+    <link rel="stylesheet" href="css/bootstrap.min.css" media="all">
+    <!--meta properties -->
+    <meta name="description" content="" />
+    <!--detailed robots meta https://developers.google.com/search/reference/robots_meta_tag -->
+    <meta name="robots" content="index, follow, max-snippet: -1, max-image-preview:large, max-video-preview: -1" />
+    <!--open graph meta tags for social sites and search engines-->
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content=" " />
+    <meta property="og:description" content=" " />
+    <meta property="og:url" content="" />
+    <meta property="og:site_name" content="" />
+    <meta property="og:image" content="images//hom-banner-compressed.jpg" />
+    <meta property="og:image:secure_url" content="images//hom-banner-compressed.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="660" />
+    <!--twitter description-->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:description" content="." />
+    <meta name="twitter:title" content="" />
+    <meta name="twitter:site" content="@" />
+    <meta name="twitter:image" content="images/hom-banner-compressed.jpg" />
+    <meta name="twitter:creator" content="@" />
+    <!--opengraph tags for location or address for information panel in google-->
+    <meta name="og:latitude" content="" />
+    <meta name="og:longitude" content="" />
+    <meta name="og:street-address" content="" />
+    <meta name="og:locality" content="" />
+    <meta name="og:region" content="" />
+    <meta name="og:postal-code" content="" />
+    <meta name="og:country-name" content="" />
+    <!--search engine verification-->
+    <meta name="google-site-verification" content="" />
+    <meta name="yandex-verification" content="" />
+    <!--powered by meta-->
+    <meta name="generator" content="" />
+</head>
+
+<body class="vw-100 vh-100">
+    <!--[if lt IE 7]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <div id="preloader">
+        <div class="spinning-circle"></div>
+    </div>
+
+    <header class="fixed-top mb-4 bg-light">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between p-3">
+            <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0">
+                <img src="images/logo.png" alt="" class="img-logo">
+            </a>
+
+            <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+                <li>Passo <span id="step">1</span> de <span id="step-max">4</span></li>
+            </ul>
+
+            <ul class="nav justify-content-center col-md-3 text-end">
+                <li></li>
+            </ul>
+        </div>
+        <div class="progressbar-container">
+            <div class="progressbar" style="width: 25%;"></div>
+        </div>
+    </header>
+
+    <div class="container-fluid bg-left">
+        <div class="row vh-100 section" id="landing">
+            <div id="app">
+                <div class="title">
+                    <div class="title-inner">
+                        <div class="cafe">
+                            <h1 class="cafe-inner">Calculadora de</h1>
+                        </div>
+                        <div class="mozart">
+                            <h1 class="mozart-inner">Investimentos</h1>
+                        </div>
+                    </div>
+                    <div class="description mt-4">
+                        <h3>Descubra o quanto você precisa poupar para comprar sua casa própria, fazer uma viagem ou
+                            para aposentar.</h3>
+                        <button class="btn btn-success btn-lg mt-4" onclick="start()">Começar</button>
+                    </div>
+                </div>
+
+                <div class="hero-image">
+                    <img src='images/drawing.png' alt=''>
+                </div>
+            </div>
+        </div>
+
+        <div class="container section" id="form">
+            <form class="f1" action="" method="POST">
+
+                <fieldset class="vertical-center" id="f1">
+                    <div class="row">
+                        <div class="heading text-center">Comece escolhendo seu objetivo</div>
+                        <div class="row">
+                            <div class="col-md-4 col-12">
+                                <input type="radio" id="control_01" name="select" value="ApInicial" onclick="textSelect(this)">
+                                <label for="control_01">
+                                    <h2>Aplicação Única</h2>
+                                    <p>Vendeu seu carro e quer saber quanto seu dinheiro vai valorizar? </p>
+                                    <p>Ou quer saber quanto tempo vai levar para comprar um playstation 5 investindo
+                                        aquele dinheiro que ganhou na raspadinha?</p>
+                                </label>
+                            </div>
+                            <div class="col-md-4 col-12">
+                                <input type="radio" id="control_02" name="select" value="ApMensal" onclick="textSelect(this)">
+                                <label for="control_02">
+                                    <h2>Aplicação Mensal</h2>
+                                    <p>Quer investir todo mês para comprar um apartamento?</p>
+                                    <p>Ou saber o quanto investir por mês para fazer aquela viagem ano que vem?</p>
+                                </label>
+                            </div>
+                            <div class="col-md-4 col-12">
+                                <input type="radio" id="control_03" name="select" value="Aposentadoria" onclick="textSelect(this)">
+                                <label for="control_03">
+                                    <h2>Aposentadoria ou Reserva de Emergência</h2>
+                                    <p>Quer saber quanto você pode tirar por mês da sua conta por X anos até ela zerar?
+                                    </p>
+                                    <p>Ou saber quanto precisa investir na reserva de emergência para manter seu salário
+                                        atual?</p>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row mt-4" id="button1">
+                            <div class="col-md-6">
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <button type="button" class="btn btn-primary btn-lg" onclick="nextfield(this)">Próximo</button>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="vertical-center" id="f2">
+                    <div class="row">
+                        <div class="heading text-center">Qual pergunta se encaixa com o que você precisa?</div>
+                        <div class="row d-table g-0" id="perguntas">
+                            <!-- Aplicação Única -->
+                            <div class="inputGroup aplicacaoInicialUnica">
+                                <input id="radio0" name="radio" type="radio" value="aplicacaoInicialUnica" onclick="perguntaSelect(this)">
+                                <label for="radio0">Qual o valor total arrecadado dado uma aplicação única inicial?</label>
+                            </div>
+                            <div class="inputGroup aplicacaoInicialUnica">
+                                <input id="radio1" name="radio" type="radio" value="aplicaHojeValorDesejadoFuturo" onclick="perguntaSelect(this)">
+                                <label for="radio1">Qual o valor que preciso aplicar hoje para que eu tenha um valor total X após tanto tempo?</label>
+                            </div>
+                            <div class="inputGroup aplicacaoInicialUnica">
+                                <input id="radio2" name="radio" type="radio" value="aplicaHojePorQuantoTempo" onclick="perguntaSelect(this)">
+                                <label for="radio2">Por quanto tempo preciso aplicar um valor único para atingir um valor total X?</label>
+                            </div>
+
+                            <!-- Aplicação Mensal -->
+                            <div class="inputGroup aplicaMensal">
+                                <input id="radio3" name="radio" type="radio" value="aplicaMensal" onclick="perguntaSelect(this)">
+                                <label for="radio3">Qual o total arrecadado com uma aplicação mensal?</label>
+                            </div>
+                            <div class="inputGroup aplicaMensal">
+                                <input id="radio4" name="radio" type="radio" value="aplicaMensalAtingirValor" onclick="perguntaSelect(this)">
+                                <label for="radio4">Qual o valor que devo aplicar mensalmente para ter um valor total X?</label>
+                            </div>
+                            <div class="inputGroup aplicaMensal">
+                                <input id="radio5" name="radio" type="radio" value="aplicaMensalPorQuantoTempo" onclick="perguntaSelect(this)">
+                                <label for="radio5">Por quanto tempo preciso aplicar mensalmente para atingir um valor total X?</label>
+                            </div>
+
+                            <!-- Aposentadoria -->
+                            <div class="inputGroup aposentadoria">
+                                <input id="radio6" name="radio" type="radio" value="previdenciaValorMensal" onclick="perguntaSelect(this)">
+                                <label for="radio6">Quanto eu posso retirar por mês, durante tantos meses?</label>
+                            </div>
+                            <div class="inputGroup aposentadoria">
+                                <input id="radio7" name="radio" type="radio" value="previdenciaValorTotalNecessario" onclick="perguntaSelect(this)">
+                                <label for="radio7">Quanto eu preciso ter aplicado para que eu consiga um valor mensal por tantos meses?</label>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <button type="button" class="btn btn-primary btn-lg" onclick="prevfield(this)">Anterior</button>
+                            </div>
+                            <div class="col-md-6 text-end" id="button2">
+                                <button type="button" class="btn btn-primary btn-lg" onclick="nextfield(this)">Próximo</button>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="vertical-center" id="f3">
+                    <div class="row">
+                        <div class="d-block heading text-center" id="textoInput">
+
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <button type="button" class="btn btn-primary btn-lg" onclick="prevfield(this)">Anterior</button>
+                            </div>
+                            <div class="col-md-6 text-end" id="button3">
+                                <button type="submit" name="submit" class="btn btn-primary btn-lg" onclick="nextfield(this)" disabled>Próximo</button>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="vertical-center" id="f4">
+                    <div class="row w-100">
+                        <div class="d-block heading text-center" id="textoFinal">
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <button type="button" class="btn btn-primary btn-lg" onclick="prevfield(this)">Anterior</button>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="copyright mb-0 text-center">Feito por: <a class="text-white fw-bolder" href="https://github.com/willmustafa" target="_blank">Willian Mustafa</a> <- Acesse o meu Github!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/calculadora.js"></script>
+    <script src="js/main.js"></script>
+</body>
+<!-- <a href="https://www.vecteezy.com/free-vector/investment">Investment Vectors by Vecteezy</a>-->
+<!-- logo by <a href="https://www.vecteezy.com/free-vector/web">Web Vectors by Vecteezy</a> -->
+
+</html>
