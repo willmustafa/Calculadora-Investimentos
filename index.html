@@ -5,45 +5,28 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title></title>
+    <title>Calculadora de Investimentos</title>
     <!-- style and script resources -->
     <link rel="stylesheet" href="css/styles.css" media="all">
     <link rel="stylesheet" href="css/bootstrap.min.css" media="all">
+    <link rel="icon" type="image/png" href="images/operators.png" />
     <!--meta properties -->
-    <meta name="description" content="" />
+    <meta name="description" content="Interface simples para cálculo de juros compostos baseados em perguntas simples." />
+    <meta name="keywords" content="calculadora, investimentos, aposentadoria, juros compostos, reserva de emergência">
+    <meta name="author" content="Willian Mustafa">
     <!--detailed robots meta https://developers.google.com/search/reference/robots_meta_tag -->
     <meta name="robots" content="index, follow, max-snippet: -1, max-image-preview:large, max-video-preview: -1" />
     <!--open graph meta tags for social sites and search engines-->
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale" content="pt_BR" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content=" " />
-    <meta property="og:description" content=" " />
-    <meta property="og:url" content="" />
-    <meta property="og:site_name" content="" />
-    <meta property="og:image" content="images//hom-banner-compressed.jpg" />
-    <meta property="og:image:secure_url" content="images//hom-banner-compressed.jpg" />
+    <meta property="og:title" content="Calculadora de Investimentos" />
+    <meta property="og:description" content="Interface simples para cálculo de juros compostos baseados em perguntas simples." />
+    <meta property="og:url" content="https://calculadora-investimentos.pages.dev/" />
+    <meta property="og:site_name" content="Calculadora de Investimentos" />
+    <meta property="og:image" content="images//operators.png" />
+    <meta property="og:image:secure_url" content="images//operators.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="660" />
-    <!--twitter description-->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:description" content="." />
-    <meta name="twitter:title" content="" />
-    <meta name="twitter:site" content="@" />
-    <meta name="twitter:image" content="images/hom-banner-compressed.jpg" />
-    <meta name="twitter:creator" content="@" />
-    <!--opengraph tags for location or address for information panel in google-->
-    <meta name="og:latitude" content="" />
-    <meta name="og:longitude" content="" />
-    <meta name="og:street-address" content="" />
-    <meta name="og:locality" content="" />
-    <meta name="og:region" content="" />
-    <meta name="og:postal-code" content="" />
-    <meta name="og:country-name" content="" />
-    <!--search engine verification-->
-    <meta name="google-site-verification" content="" />
-    <meta name="yandex-verification" content="" />
-    <!--powered by meta-->
-    <meta name="generator" content="" />
 </head>
 
 <body class="vw-100 vh-100">
@@ -56,17 +39,14 @@
     </div>
 
     <header class="fixed-top mb-4 bg-light">
-        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between p-3">
-            <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0">
-                <img src="images/logo.png" alt="" class="img-logo">
+        <div class="container d-flex flex-wrap align-items-center justify-content-center justify-content-md-between p-3">
+            <a href="/" class="d-table align-items-center col-md-3 mb-2 mb-md-0" style="text-decoration: none;">
+                <img src="images/operators.png" alt="" class="img-logo">
+                <h4 class="menu-title">Calculadora de Investimentos</h4>
             </a>
 
-            <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-                <li>Passo <span id="step">1</span> de <span id="step-max">4</span></li>
-            </ul>
-
             <ul class="nav justify-content-center col-md-3 text-end">
-                <li></li>
+                <li>Passo <span id="step">1</span> de <span id="step-max">4</span></li>
             </ul>
         </div>
         <div class="progressbar-container">
@@ -89,7 +69,7 @@
                     <div class="description mt-4">
                         <h3>Descubra o quanto você precisa poupar para comprar sua casa própria, fazer uma viagem ou
                             para aposentar.</h3>
-                        <button class="btn btn-success btn-lg mt-4" onclick="start()">Começar</button>
+                        <button class="btn btn-success btn-xl mt-4 rounded-pill" onclick="start()">Começar</button>
                     </div>
                 </div>
 
@@ -233,17 +213,18 @@
         <div class="container">
             <div class="row">
                 <div class="col-12 text-center">
-                    <p class="copyright mb-0 text-center">Feito por: <a class="text-white fw-bolder" href="https://github.com/willmustafa" target="_blank">Willian Mustafa</a> <- Acesse o meu Github!
+                    <p class="copyright mb-0 text-center">Feito por: <a class="text-white fw-bolder" href="https://github.com/willmustafa" target="_blank">Willian Mustafa</a> <- Acesse o meu Github! Re-design por <a class="text-white fw-bolder" href="https://thailanagazawa.com.br" target="_blank">Thaila S. Nagazawa</a>
                     </p>
                 </div>
             </div>
         </div>
     </footer>
 
+    <script src="js/simple-mask-money.js"></script>
     <script src="js/calculadora.js"></script>
     <script src="js/main.js"></script>
 </body>
-<!-- <a href="https://www.vecteezy.com/free-vector/investment">Investment Vectors by Vecteezy</a>-->
+<!-- Home drawing by <a href='https://www.freepik.com/vectors/home-owner'>Home owner vector created by pch.vector - www.freepik.com</a>-->
 <!-- logo by <a href="https://www.vecteezy.com/free-vector/web">Web Vectors by Vecteezy</a> -->
 
 </html>

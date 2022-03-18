@@ -6,7 +6,7 @@
  * @returns {number}
  */
 function aplicacaoInicialUnica(apInicial, juros, tempo){
-    return apInicial*((1+(juros/100))**tempo)
+    return (apInicial*((1+(juros/100))**tempo))
 }
 
 /**
@@ -17,7 +17,7 @@ function aplicacaoInicialUnica(apInicial, juros, tempo){
  * @returns {number}
  */
 function aplicaHojeValorDesejadoFuturo(valorDesejado, juros, tempo){
-    return valorDesejado/((1+(juros/100))**tempo)
+    return (valorDesejado/((1+(juros/100))**tempo))
 }
 
 /**
@@ -28,10 +28,17 @@ function aplicaHojeValorDesejadoFuturo(valorDesejado, juros, tempo){
  * @returns {number} Quantidade de meses aplicando
  */
 function aplicaHojePorQuantoTempo(valorDesejado, apInicial, juros){
-    return (Math.log10(valorDesejado/apInicial))/(Math.log10(1+(juros/100)))
+    return ((Math.log10(valorDesejado/apInicial))/(Math.log10(1+(juros/100)))).toFixed(0)
 }
 
-
+/**
+ * Qual o total arrecadado com uma aplicação mensal + aplicação inicial?
+ * @param {number} apInicial 
+ * @param {number} apMensal 
+ * @param {number} juros 
+ * @param {number} tempo 
+ * @returns Valor Final
+ */
 function aplicaMensal(apInicial, apMensal, juros, tempo){
     return  aplicacaoInicialUnica(apInicial, juros, tempo) + (apMensal * (((((1 + (juros / 100))) ** tempo) - 1) / (juros / 100)))
 }
@@ -55,7 +62,7 @@ function aplicaMensalAtingirValor(valorDesejado, juros, tempo){
  * @returns {number} Quantidade de meses para atingir o valor desejado
  */
 function aplicaMensalPorQuantoTempo(valorDesejado, juros, apMensal){
-    return Math.log10(((valorDesejado*(juros/100))/apMensal)+1)/Math.log10(1+(juros/100))
+    return (Math.log10(((valorDesejado*(juros/100))/apMensal)+1)/Math.log10(1+(juros/100))).toFixed(0)
 }
 
 /**
