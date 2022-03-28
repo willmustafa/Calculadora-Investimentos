@@ -244,6 +244,8 @@ function calculadora() {
     let apMensal = inputValues.find(x => x[0] == "apMensal") || [];
     let valorDesejado = inputValues.find(x => x[0] == "valorDesejado") || [];
 
+    console.log(apInicial[1]);
+
     let resultado = 0;
 
     switch (selecionado) {
@@ -264,10 +266,11 @@ function calculadora() {
         case 'aplicaMensal':
             resultado = aplicaMensal(SimpleMaskMoney.formatToNumber(apInicial[1]), SimpleMaskMoney.formatToNumber(apMensal[1]), SimpleMaskMoney.formatToNumber(juros[1]), Number(tempo[1]));
             resultado = formatNumber(resultado);
-            textoResultado = textoResultado.replace('{valorFinal}', resultado).replace('{apInicial}', valorDesejado[1]).replace('{juros}', juros[1]).replace('{tempo}', tempo[1]).replace('{apMensal}', apMensal[1]);
+            textoResultado = textoResultado.replace('{valorFinal}', resultado).replace('{apInicial}', apInicial[1]).replace('{juros}', juros[1]).replace('{tempo}', tempo[1]).replace('{apMensal}', apMensal[1]);
             break;
         case 'aplicaMensalAtingirValor':
             resultado = aplicaMensalAtingirValor(SimpleMaskMoney.formatToNumber(valorDesejado[1]), SimpleMaskMoney.formatToNumber(juros[1]), Number(tempo[1]));
+            resultado = formatNumber(resultado);
             textoResultado = textoResultado.replace('{valorFinal}', resultado).replace('{valorDesejado}', valorDesejado[1]).replace('{juros}', juros[1]).replace('{tempo}', tempo[1]);
             break;
         case 'aplicaMensalPorQuantoTempo':
