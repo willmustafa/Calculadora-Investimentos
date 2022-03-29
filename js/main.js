@@ -124,7 +124,8 @@ function start() {
     document.getElementsByTagName('header')[0].classList.toggle('active');
 
     fadeOut(document.getElementById('landing'), 250);
-    document.getElementsByTagName('form')[0].className = 'f1'
+    document.getElementsByTagName('form')[0].className = 'f1';
+    document.getElementById('form').classList.toggle('d-flex');
 }
 
 /**

@@ -16,7 +16,6 @@ body {
     overflow: hidden;
     font-family: 'Roboto Slab', serif !important;
     height: 100vh;
-    overflow: hidden;
 }
 
 .heading {
@@ -256,6 +255,10 @@ form {
     opacity: 1;
 }
 
+#form{
+    display: none;
+}
+
 /* FIRST FORM */
 /* Code from https://codepen.io/adamstuartclark/pen/pbYVYR/ */
 
@@ -342,6 +345,9 @@ fieldset {
     opacity: 0;
 }
 
+#button1{
+    margin-top: 1.5rem;
+}
 
 /* Second Form */
 .ApInicial .aplicacaoInicialUnica,
@@ -680,6 +686,7 @@ footer {
 @media (max-width: 800px){
     .heading{
         font-size: 1.5rem !important;
+        padding-top: 2rem;
     }
 
     .title h1{
@@ -696,5 +703,23 @@ footer {
 
     .hero-image{
         width: 150vw;
+    }
+
+    header + div {
+        margin-top: 104px !important;
+        padding-bottom: 100px;
+    }
+
+    body{
+        overflow-y: scroll !important;
+    }
+
+    .section{
+        height: 100%;
+        min-height: 100vh;
+    }
+
+    #button1{
+        margin-top: 0 !important;
     }
 }

@@ -80,44 +80,42 @@
         </div>
 
         <div class="container section" id="form">
-            <form class="f1" action="" method="POST">
+            <form class="" action="" method="POST">
 
                 <fieldset class="vertical-center" id="f1">
                     <div class="row">
                         <div class="heading text-center">Comece escolhendo seu objetivo</div>
-                        <div class="row">
-                            <div class="col-md-4 col-12">
-                                <input type="radio" id="control_01" name="select" value="ApInicial" onclick="textSelect(this)">
-                                <label for="control_01">
-                                    <h2>Aplicação Única</h2>
-                                    <p>Vendeu seu carro e quer saber quanto seu dinheiro vai valorizar? </p>
-                                    <p>Ou quer saber quanto tempo vai levar para comprar um playstation 5 investindo
-                                        aquele dinheiro que ganhou na raspadinha?</p>
-                                </label>
-                            </div>
-                            <div class="col-md-4 col-12">
-                                <input type="radio" id="control_02" name="select" value="ApMensal" onclick="textSelect(this)">
-                                <label for="control_02">
-                                    <h2>Aplicação Mensal</h2>
-                                    <p>Quer investir todo mês para comprar um apartamento?</p>
-                                    <p>Ou saber o quanto investir por mês para fazer aquela viagem ano que vem?</p>
-                                </label>
-                            </div>
-                            <div class="col-md-4 col-12">
-                                <input type="radio" id="control_03" name="select" value="Aposentadoria" onclick="textSelect(this)">
-                                <label for="control_03">
-                                    <h2>Aposentadoria ou Reserva de Emergência</h2>
-                                    <p>Quer saber quanto você pode tirar por mês da sua conta por X anos até ela zerar?
-                                    </p>
-                                    <p>Ou saber quanto precisa investir na reserva de emergência para manter seu salário
-                                        atual?</p>
-                                </label>
-                            </div>
+                        <div class="col-md-4 col-12 mb-3">
+                            <input type="radio" id="control_01" name="select" value="ApInicial" onclick="textSelect(this)">
+                            <label for="control_01">
+                                <h2>Aplicação Única</h2>
+                                <p>Vendeu seu carro e quer saber quanto seu dinheiro vai valorizar? </p>
+                                <p>Ou quer saber quanto tempo vai levar para comprar um playstation 5 investindo
+                                    aquele dinheiro que ganhou na raspadinha?</p>
+                            </label>
                         </div>
-                        <div class="row mt-4" id="button1">
-                            <div class="col-md-6">
+                        <div class="col-md-4 col-12 mb-3">
+                            <input type="radio" id="control_02" name="select" value="ApMensal" onclick="textSelect(this)">
+                            <label for="control_02">
+                                <h2>Aplicação Mensal</h2>
+                                <p>Quer investir todo mês para comprar um apartamento?</p>
+                                <p>Ou saber o quanto investir por mês para fazer aquela viagem ano que vem?</p>
+                            </label>
+                        </div>
+                        <div class="col-md-4 col-12 mb-3">
+                            <input type="radio" id="control_03" name="select" value="Aposentadoria" onclick="textSelect(this)">
+                            <label for="control_03">
+                                <h2>Aposentadoria ou Reserva de Emergência</h2>
+                                <p>Quer saber quanto você pode tirar por mês da sua conta por X anos até ela zerar?
+                                </p>
+                                <p>Ou saber quanto precisa investir na reserva de emergência para manter seu salário
+                                    atual?</p>
+                            </label>
+                        </div>
+                        <div class="row" id="button1">
+                            <div class="col-6">
                             </div>
-                            <div class="col-md-6 text-end">
+                            <div class="col-6 text-end">
                                 <button type="button" class="btn btn-primary btn-lg" onclick="nextfield(this)">Próximo</button>
                             </div>
                         </div>
@@ -167,10 +165,10 @@
                             </div>
                         </div>
                         <div class="row mt-4">
-                            <div class="col-md-6">
+                            <div class="col-6">
                                 <button type="button" class="btn btn-primary btn-lg" onclick="prevfield(this)">Anterior</button>
                             </div>
-                            <div class="col-md-6 text-end" id="button2">
+                            <div class="col-6 text-end" id="button2">
                                 <button type="button" class="btn btn-primary btn-lg" onclick="nextfield(this)">Próximo</button>
                             </div>
                         </div>
@@ -183,10 +181,10 @@
 
                         </div>
                         <div class="row mt-4">
-                            <div class="col-md-6">
+                            <div class="col-6">
                                 <button type="button" class="btn btn-primary btn-lg" onclick="prevfield(this)">Anterior</button>
                             </div>
-                            <div class="col-md-6 text-end" id="button3">
+                            <div class="col-6 text-end" id="button3">
                                 <button type="submit" name="submit" class="btn btn-primary btn-lg" onclick="nextfield(this)" disabled>Próximo</button>
                             </div>
                         </div>
