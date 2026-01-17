@@ -82,10 +82,10 @@ function ResultsSection({
             <button
               type="button"
               onClick={onToggleAdvanced}
-              className={`mt-6 flex w-full items-center justify-between rounded-2xl border px-4 py-3 text-left text-sm font-semibold transition ${
+              className={`mt-6 flex w-full items-center justify-between border-b pb-2 text-left text-xs font-semibold uppercase tracking-[0.28em] transition ${
                 isDark
-                  ? 'border-white/10 bg-slate-950/50 text-slate-100 hover:border-emerald-400/30'
-                  : 'border-slate-200 bg-white/90 text-slate-800 hover:border-emerald-200'
+                  ? 'border-white/10 text-slate-400 hover:text-emerald-200'
+                  : 'border-slate-200 text-slate-500 hover:text-emerald-700'
               }`}
             >
               Configurações avançadas
@@ -104,10 +104,10 @@ function ResultsSection({
                 <input
                   type="number"
                   defaultValue={8.7}
-                  className={`rounded-2xl border px-3 py-2 text-sm outline-none ${
+                  className={`rounded-xl border px-3 py-2 text-sm outline-none ${
                     isDark
-                      ? 'border-white/10 bg-slate-950/60 text-slate-100'
-                      : 'border-slate-200 bg-white text-slate-800'
+                      ? 'border-white/10 bg-slate-950/40 text-slate-100'
+                      : 'border-slate-200 bg-white/80 text-slate-800'
                   }`}
                 />
               </div>
@@ -118,10 +118,10 @@ function ResultsSection({
                 <input
                   type="number"
                   defaultValue={11.1}
-                  className={`rounded-2xl border px-3 py-2 text-sm outline-none ${
+                  className={`rounded-xl border px-3 py-2 text-sm outline-none ${
                     isDark
-                      ? 'border-white/10 bg-slate-950/60 text-slate-100'
-                      : 'border-slate-200 bg-white text-slate-800'
+                      ? 'border-white/10 bg-slate-950/40 text-slate-100'
+                      : 'border-slate-200 bg-white/80 text-slate-800'
                   }`}
                 />
               </div>
@@ -132,10 +132,10 @@ function ResultsSection({
                 <input
                   type="number"
                   defaultValue={4.2}
-                  className={`rounded-2xl border px-3 py-2 text-sm outline-none ${
+                  className={`rounded-xl border px-3 py-2 text-sm outline-none ${
                     isDark
-                      ? 'border-white/10 bg-slate-950/60 text-slate-100'
-                      : 'border-slate-200 bg-white text-slate-800'
+                      ? 'border-white/10 bg-slate-950/40 text-slate-100'
+                      : 'border-slate-200 bg-white/80 text-slate-800'
                   }`}
                 />
               </div>
@@ -146,10 +146,10 @@ function ResultsSection({
                 <input
                   type="number"
                   defaultValue={0.5}
-                  className={`rounded-2xl border px-3 py-2 text-sm outline-none ${
+                  className={`rounded-xl border px-3 py-2 text-sm outline-none ${
                     isDark
-                      ? 'border-white/10 bg-slate-950/60 text-slate-100'
-                      : 'border-slate-200 bg-white text-slate-800'
+                      ? 'border-white/10 bg-slate-950/40 text-slate-100'
+                      : 'border-slate-200 bg-white/80 text-slate-800'
                   }`}
                 />
               </div>
