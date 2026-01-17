@@ -20,6 +20,21 @@ function ResultsSection({
   advancedOpen,
   onToggleAdvanced,
 }: ResultsSectionProps) {
+  const advancedFields = [
+    { label: 'Selic efetiva (% a.a)', defaultValue: 10.5 },
+    { label: 'CDI (% a.a)', defaultValue: 10.4 },
+    { label: 'IPCA (% a.a)', defaultValue: 4.2 },
+    { label: 'TR (% a.a)', defaultValue: 1.6 },
+    { label: 'Juro nominal do Tesouro Prefixado (% a.a)', defaultValue: 11.2 },
+    { label: 'Taxa de custodia da B3 (% a.a)', defaultValue: 0.2 },
+    { label: 'Juro real do Tesouro IPCA+ (% a.a)', defaultValue: 5.3 },
+    { label: 'Taxa de administracao do Fundo DI (% a.a)', defaultValue: 0.4 },
+    { label: 'Rentabilidade do CDB (% a.a)', defaultValue: 12.1 },
+    { label: 'Rentabilidade do Fundo DI (% a.a)', defaultValue: 10.2 },
+    { label: 'Rentabilidade da LCI/LCA (% a.a)', defaultValue: 9.8 },
+    { label: 'Rentabilidade da Poupanca (% a.a)', defaultValue: 6.2 },
+  ]
+
   if (!submitted) {
     return null
   }
@@ -63,7 +78,7 @@ function ResultsSection({
                           isDark ? 'bg-emerald-400/10 text-emerald-200' : 'bg-emerald-50 text-emerald-700'
                       }`}
                   >
-                    8,7% a.a
+                    CDB
                   </span>
               </div>
 
@@ -99,65 +114,28 @@ function ResultsSection({
 
             <div
               className={`grid gap-4 overflow-hidden pt-4 text-sm transition-all duration-500 ${
-                advancedOpen ? 'max-h-80 opacity-100' : 'max-h-0 opacity-0'
+                advancedOpen
+                  ? 'max-h-[20vh] opacity-100 overflow-y-auto pr-2'
+                  : 'max-h-0 opacity-0'
               }`}
             >
-              <div className="grid gap-2 sm:grid-cols-2">
-                <label className="text-xs uppercase tracking-[0.22em] text-slate-400">
-                  Taxa de juros (% a.a)
-                </label>
-                <input
-                  type="number"
-                  defaultValue={8.7}
-                  className={`rounded-xl border px-3 py-2 text-sm outline-none ${
-                    isDark
-                      ? 'border-white/10 bg-slate-950/40 text-slate-100'
-                      : 'border-slate-200 bg-white/80 text-slate-800'
-                  }`}
-                />
-              </div>
-              <div className="grid gap-2 sm:grid-cols-2">
-                <label className="text-xs uppercase tracking-[0.22em] text-slate-400">
-                  CDI (% a.a)
-                </label>
-                <input
-                  type="number"
-                  defaultValue={11.1}
-                  className={`rounded-xl border px-3 py-2 text-sm outline-none ${
-                    isDark
-                      ? 'border-white/10 bg-slate-950/40 text-slate-100'
-                      : 'border-slate-200 bg-white/80 text-slate-800'
-                  }`}
-                />
-              </div>
-              <div className="grid gap-2 sm:grid-cols-2">
-                <label className="text-xs uppercase tracking-[0.22em] text-slate-400">
-                  Inflação (% a.a)
-                </label>
-                <input
-                  type="number"
-                  defaultValue={4.2}
-                  className={`rounded-xl border px-3 py-2 text-sm outline-none ${
-                    isDark
-                      ? 'border-white/10 bg-slate-950/40 text-slate-100'
-                      : 'border-slate-200 bg-white/80 text-slate-800'
-                  }`}
-                />
-              </div>
-              <div className="grid gap-2 sm:grid-cols-2">
-                <label className="text-xs uppercase tracking-[0.22em] text-slate-400">
-                  Taxa de administração (%)
-                </label>
-                <input
-                  type="number"
-                  defaultValue={0.5}
-                  className={`rounded-xl border px-3 py-2 text-sm outline-none ${
-                    isDark
-                      ? 'border-white/10 bg-slate-950/40 text-slate-100'
-                      : 'border-slate-200 bg-white/80 text-slate-800'
-                  }`}
-                />
-              </div>
+              {advancedFields.map((field) => (
+                <div key={field.label} className="grid gap-2 sm:grid-cols-2">
+                  <label className="text-xs uppercase tracking-[0.22em] text-slate-400">
+                    {field.label}
+                  </label>
+                  <input
+                    type="number"
+                    defaultValue={field.defaultValue}
+                    step="0.01"
+                    className={`rounded-xl border px-3 py-2 text-sm outline-none ${
+                      isDark
+                        ? 'border-white/10 bg-slate-950/40 text-slate-100'
+                        : 'border-slate-200 bg-white/80 text-slate-800'
+                    }`}
+                  />
+                </div>
+              ))}
             </div>
           </div>
 
