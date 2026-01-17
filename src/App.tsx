@@ -40,7 +40,12 @@ const questionGroups = [
 function App() {
   const [query, setQuery] = useState('')
   const [activeGroupId, setActiveGroupId] = useState('')
-  const [isDark, setIsDark] = useState(false)
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof window === 'undefined') {
+      return false
+    }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches
+  })
   const [submitted, setSubmitted] = useState(false)
   const [advancedOpen, setAdvancedOpen] = useState(false)
   const [introDone, setIntroDone] = useState(false)
@@ -62,6 +67,15 @@ function App() {
   useEffect(() => {
     const timer = window.setTimeout(() => setIntroDone(true), 2600)
     return () => window.clearTimeout(timer)
+  }, [])
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    const handleChange = (event: MediaQueryListEvent) => {
+      setIsDark(event.matches)
+    }
+    mediaQuery.addEventListener('change', handleChange)
+    return () => mediaQuery.removeEventListener('change', handleChange)
   }, [])
 
   return (
