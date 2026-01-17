@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import type { ReactNode } from 'react'
 
 type QuestionInputCardProps = {
@@ -19,38 +20,22 @@ function QuestionInputCard({
   onShowPresets,
   children,
 }: QuestionInputCardProps) {
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null)
+
+  useEffect(() => {
+    if (!textareaRef.current) {
+      return
+    }
+    textareaRef.current.style.height = '0px'
+    textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
+  }, [query])
+
   return (
     <div
       className={`rounded-[32px] border p-7 shadow-[0_28px_70px_rgba(15,23,42,0.15)] backdrop-blur ${
         isDark ? 'border-white/10 bg-slate-900/70' : 'border-white/70 bg-white/70'
       }`}
     >
-      {!submitted && (
-        <div className="mb-6 space-y-3 text-center fade-in">
-          <p
-            className={`text-xs font-semibold uppercase tracking-[0.4em] ${
-              isDark ? 'text-emerald-200/80' : 'text-emerald-700/80'
-            }`}
-          >
-            Simulador rápido
-          </p>
-          <h1
-            className={`text-balance font-display text-3xl sm:text-5xl ${
-              isDark ? 'text-slate-100' : 'text-slate-900'
-            }`}
-          >
-            Calculadora de Investimentos
-          </h1>
-          <p
-            className={`text-sm sm:text-base ${
-              isDark ? 'text-slate-300' : 'text-slate-600'
-            }`}
-          >
-            Digite sua pergunta e obtenha um panorama do seu plano financeiro.
-          </p>
-        </div>
-      )}
-
       <div className="flex justify-between items-center">
         <label
             className={`text-[11px] font-semibold uppercase tracking-[0.32em] ${
@@ -77,7 +62,9 @@ function QuestionInputCard({
       </div>
       <div className="relative mt-4">
         <textarea
-          className={`h-32 w-full resize-none rounded-3xl border p-6 pr-16 text-xl shadow-inner outline-none transition focus:border-emerald-300 focus:ring-2 focus:ring-emerald-200 ${
+          ref={textareaRef}
+          rows={1}
+          className={`w-full resize-none overflow-hidden rounded-3xl border p-6 pr-16 text-xl shadow-inner outline-none transition focus:border-emerald-300 focus:ring-2 focus:ring-emerald-200 ${
             isDark
               ? 'border-white/10 bg-slate-950/60 text-slate-100 placeholder:text-slate-400'
               : 'border-slate-200/80 bg-white/80 text-slate-800 placeholder:text-slate-400'

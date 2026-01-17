@@ -95,7 +95,7 @@ function App() {
             onToggleTheme={() => setIsDark((value) => !value)}
           />
 
-          <div className="relative mx-auto flex h-full max-w-6xl flex-col px-6">
+          <div className="relative mx-auto flex h-full max-w-3/4 flex-col px-6">
             <ResultsSection
               isDark={isDark}
               submitted={submitted}
@@ -106,7 +106,7 @@ function App() {
             />
 
             <div
-              className={`absolute left-1/2 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              className={`absolute w-full left-1/2 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 submitted
                   ? 'bottom-6 w-[min(100%,1100px)] -translate-x-1/2'
                   : 'top-1/2 w-[min(100%,900px)] -translate-x-1/2 -translate-y-1/2'
