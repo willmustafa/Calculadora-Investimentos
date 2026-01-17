@@ -90,7 +90,7 @@ function App() {
           }`}
         />
 
-        <main className="relative z-10 h-full w-full">
+        <main className="relative h-full w-full">
           <HeaderBar
             isDark={isDark}
             onToggleTheme={() => setIsDark((value) => !value)}

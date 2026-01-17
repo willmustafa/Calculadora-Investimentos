@@ -64,7 +64,7 @@ function QuestionInputCard({
         <textarea
           ref={textareaRef}
           rows={1}
-          className={`min-h-[88px] w-full resize-none overflow-hidden rounded-3xl border p-6 pr-16 text-xl shadow-inner outline-none transition focus:border-emerald-300 focus:ring-2 focus:ring-emerald-200 ${
+          className={`min-h-20 w-full resize-none overflow-hidden rounded-3xl border p-6 pr-16 text-xl shadow-inner outline-none transition focus:border-emerald-300 focus:ring-2 focus:ring-emerald-200 ${
             isDark
               ? 'border-white/10 bg-slate-950/60 text-slate-100 placeholder:text-slate-400'
               : 'border-slate-200/80 bg-white/80 text-slate-800 placeholder:text-slate-400'

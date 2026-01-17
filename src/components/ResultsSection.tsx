@@ -35,7 +35,7 @@ function ResultsSection({
           Pergunta enviada
         </p>
         <h2
-          className={`mt-3 max-w-2xl text-balance font-display text-2xl sm:text-3xl ${
+          className={`mt-4 text-balance font-display text-2xl sm:text-3xl ${
             isDark ? 'text-slate-100' : 'text-slate-900'
           }`}
         >
@@ -50,17 +50,29 @@ function ResultsSection({
               isDark ? 'border-white/10 bg-slate-900/70' : 'border-white/70 bg-white/80'
             }`}
           >
-            <div className="flex items-start justify-between gap-4">
-              <div>
+              <div className="flex justify-between items-center w-full">
+                  <p
+                      className={`text-xs font-semibold uppercase tracking-[0.32em] ${
+                          isDark ? 'text-slate-400' : 'text-slate-500'
+                      }`}
+                  >
+                      Valor estimado
+                  </p>
+                  <span
+                      className={`rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] ${
+                          isDark ? 'bg-emerald-400/10 text-emerald-200' : 'bg-emerald-50 text-emerald-700'
+                      }`}
+                  >
+                    8,7% a.a
+                  </span>
+              </div>
+
+              <div className="flex items-start justify-between gap-4 w-full">
+
+                <div>
+
                 <p
-                  className={`text-xs font-semibold uppercase tracking-[0.32em] ${
-                    isDark ? 'text-slate-400' : 'text-slate-500'
-                  }`}
-                >
-                  Valor estimado
-                </p>
-                <p
-                  className={`mt-3 text-4xl font-semibold ${
+                  className={`mt-4 text-6xl font-semibold ${
                     isDark ? 'text-emerald-200' : 'text-emerald-700'
                   }`}
                 >
@@ -70,13 +82,6 @@ function ResultsSection({
                   Resultado considerando reinvestimento e taxas atuais.
                 </p>
               </div>
-              <span
-                className={`rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] ${
-                  isDark ? 'bg-emerald-400/10 text-emerald-200' : 'bg-emerald-50 text-emerald-700'
-                }`}
-              >
-                8,7% a.a
-              </span>
             </div>
 
             <button

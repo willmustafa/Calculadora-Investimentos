@@ -5,7 +5,7 @@ type HeaderBarProps = {
 
 function HeaderBar({ isDark, onToggleTheme }: HeaderBarProps) {
   return (
-    <header className="fixed inset-x-0 top-6">
+    <header className="absolute z-10 inset-x-0 top-6">
       <div className="flex items-center justify-between max-w-3/4 mx-auto">
           <span
               className={`text-[11px] font-semibold uppercase tracking-[0.32em] ${
