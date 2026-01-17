@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 type ChartItem = {
   label: string
   value: number
@@ -12,6 +14,24 @@ type ResultsSectionProps = {
   onToggleAdvanced: () => void
 }
 
+const ADVANCED_FIELDS = [
+  { id: 'selicEfetiva', label: 'Selic efetiva (% a.a)', defaultValue: '10.50', bcbSeriesId: 11 },
+  { id: 'cdi', label: 'CDI (% a.a)', defaultValue: '10.40', bcbSeriesId: 12 },
+  { id: 'ipca', label: 'IPCA (% a.a)', defaultValue: '4.20', bcbSeriesId: 433 },
+  { id: 'tr', label: 'TR (% a.a)', defaultValue: '1.60', bcbSeriesId: 226 },
+  { id: 'tesouroPrefixado', label: 'Juro nominal do Tesouro Prefixado (% a.a)', defaultValue: '11.20' },
+  { id: 'taxaCustodiaB3', label: 'Taxa de custodia da B3 (% a.a)', defaultValue: '0.20' },
+  { id: 'tesouroIpca', label: 'Juro real do Tesouro IPCA+ (% a.a)', defaultValue: '5.30' },
+  { id: 'taxaAdmFundoDi', label: 'Taxa de administracao do Fundo DI (% a.a)', defaultValue: '0.40' },
+  { id: 'rentabilidadeCdb', label: 'Rentabilidade do CDB (% a.a)', defaultValue: '12.10' },
+  { id: 'rentabilidadeFundoDi', label: 'Rentabilidade do Fundo DI (% a.a)', defaultValue: '10.20' },
+  { id: 'rentabilidadeLciLca', label: 'Rentabilidade da LCI/LCA (% a.a)', defaultValue: '9.80' },
+  { id: 'rentabilidadePoupanca', label: 'Rentabilidade da Poupanca (% a.a)', defaultValue: '6.20' },
+]
+
+const BCB_CACHE_KEY = 'bcb-series-cache'
+const BCB_CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000
+
 function ResultsSection({
   isDark,
   submitted,
@@ -20,20 +40,78 @@ function ResultsSection({
   advancedOpen,
   onToggleAdvanced,
 }: ResultsSectionProps) {
-  const advancedFields = [
-    { label: 'Selic efetiva (% a.a)', defaultValue: 10.5 },
-    { label: 'CDI (% a.a)', defaultValue: 10.4 },
-    { label: 'IPCA (% a.a)', defaultValue: 4.2 },
-    { label: 'TR (% a.a)', defaultValue: 1.6 },
-    { label: 'Juro nominal do Tesouro Prefixado (% a.a)', defaultValue: 11.2 },
-    { label: 'Taxa de custodia da B3 (% a.a)', defaultValue: 0.2 },
-    { label: 'Juro real do Tesouro IPCA+ (% a.a)', defaultValue: 5.3 },
-    { label: 'Taxa de administracao do Fundo DI (% a.a)', defaultValue: 0.4 },
-    { label: 'Rentabilidade do CDB (% a.a)', defaultValue: 12.1 },
-    { label: 'Rentabilidade do Fundo DI (% a.a)', defaultValue: 10.2 },
-    { label: 'Rentabilidade da LCI/LCA (% a.a)', defaultValue: 9.8 },
-    { label: 'Rentabilidade da Poupanca (% a.a)', defaultValue: 6.2 },
-  ]
+  const [advancedValues, setAdvancedValues] = useState<Record<string, string>>(() =>
+    Object.fromEntries(ADVANCED_FIELDS.map((field) => [field.id, field.defaultValue])),
+  )
+
+  useEffect(() => {
+    const loadBcbSeries = async () => {
+      const fieldsFromBcb = ADVANCED_FIELDS.filter((field) => field.bcbSeriesId)
+      if (fieldsFromBcb.length === 0) {
+        return
+      }
+
+      try {
+        const cachedRaw = localStorage.getItem(BCB_CACHE_KEY)
+        if (cachedRaw) {
+          const cached = JSON.parse(cachedRaw) as {
+            timestamp?: number
+            values?: Record<string, string>
+          }
+          if (
+            cached.timestamp &&
+            Date.now() - cached.timestamp < BCB_CACHE_TTL_MS &&
+            cached.values
+          ) {
+            setAdvancedValues((prev) => ({
+              ...prev,
+              ...cached.values,
+            }))
+            return
+          }
+        }
+
+        const responses = await Promise.all(
+          fieldsFromBcb.map(async (field) => {
+            const response = await fetch(
+              `https://api.bcb.gov.br/dados/serie/bcdata.sgs.${field.bcbSeriesId}/dados/ultimos/1?formato=json`,
+            )
+            if (!response.ok) {
+              throw new Error(`BCB ${field.bcbSeriesId} fetch failed`)
+            }
+            const data = (await response.json()) as Array<{ valor?: string }>
+            const rawValue = data?.[0]?.valor
+            if (!rawValue) {
+              throw new Error(`BCB ${field.bcbSeriesId} missing value`)
+            }
+            const parsedValue = Number(rawValue.replace(',', '.'))
+            if (Number.isNaN(parsedValue)) {
+              throw new Error(`BCB ${field.bcbSeriesId} invalid value`)
+            }
+            return { id: field.id, value: parsedValue.toFixed(2) }
+          }),
+        )
+
+        const cacheValues = Object.fromEntries(
+          responses.map((item) => [item.id, item.value]),
+        ) as Record<string, string>
+        if (Object.keys(cacheValues).length > 0) {
+          setAdvancedValues((prev) => ({
+            ...prev,
+            ...cacheValues,
+          }))
+          localStorage.setItem(
+            BCB_CACHE_KEY,
+            JSON.stringify({ timestamp: Date.now(), values: cacheValues }),
+          )
+        }
+      } catch (error) {
+        console.warn('BCB fetch failed', error)
+      }
+    }
+
+    void loadBcbSeries()
+  }, [])
 
   if (!submitted) {
     return null
@@ -119,14 +197,20 @@ function ResultsSection({
                   : 'max-h-0 opacity-0'
               }`}
             >
-              {advancedFields.map((field) => (
+              {ADVANCED_FIELDS.map((field) => (
                 <div key={field.label} className="grid gap-2 sm:grid-cols-2">
                   <label className="text-xs uppercase tracking-[0.22em] text-slate-400">
                     {field.label}
                   </label>
                   <input
                     type="number"
-                    defaultValue={field.defaultValue}
+                    value={advancedValues[field.id]}
+                    onChange={(event) =>
+                      setAdvancedValues((prev) => ({
+                        ...prev,
+                        [field.id]: event.target.value,
+                      }))
+                    }
                     step="0.01"
                     className={`rounded-xl border px-3 py-2 text-sm outline-none ${
                       isDark
