@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import HeaderBar from './components/HeaderBar'
 import PresetQuestions from './components/PresetQuestions'
 import QuestionInputCard from './components/QuestionInputCard'
@@ -43,6 +43,7 @@ function App() {
   const [isDark, setIsDark] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [advancedOpen, setAdvancedOpen] = useState(false)
+  const [introDone, setIntroDone] = useState(false)
   const displayedQuestion =
     query.trim() || 'Qual seria o valor final do meu investimento?'
   const chartItems = [
@@ -58,6 +59,11 @@ function App() {
     setActiveGroupId('')
   }
 
+  useEffect(() => {
+    const timer = window.setTimeout(() => setIntroDone(true), 2600)
+    return () => window.clearTimeout(timer)
+  }, [])
+
   return (
     <div
       className={`h-screen overflow-hidden ${
@@ -65,6 +71,26 @@ function App() {
       }`}
     >
       <div className="relative h-full w-full">
+        {!introDone && (
+          <div className="intro-screen bg-[radial-gradient(circle_at_top,#fff6e8_0%,#eef7f4_45%,#fef3e1_100%)]">
+            <div className="intro-content">
+              <span className="intro-badge">Calculadora de investimentos</span>
+              <h1 className="intro-title font-display">
+                Cada aporte importa
+              </h1>
+              <p className="intro-subtitle">
+                Descubra quanto seu dinheiro pode render ao longo do tempo
+              </p>
+              <div className="intro-illustration">
+                <img
+                  src="/src/assets/investment.gif"
+                  alt="Investimento em crescimento"
+                  className="intro-gif"
+                />
+              </div>
+            </div>
+          </div>
+        )}
         <div
           className={`absolute inset-0 ${
             isDark
