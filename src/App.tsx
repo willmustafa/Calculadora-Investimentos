@@ -39,7 +39,7 @@ const questionGroups = [
 
 function App() {
   const [query, setQuery] = useState('')
-  const [activeGroupId, setActiveGroupId] = useState(questionGroups[0].id)
+  const [activeGroupId, setActiveGroupId] = useState('')
   const [isDark, setIsDark] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [advancedOpen, setAdvancedOpen] = useState(false)
@@ -55,6 +55,7 @@ function App() {
     setSubmitted(false)
     setAdvancedOpen(false)
     setQuery('')
+    setActiveGroupId('')
   }
 
   return (
