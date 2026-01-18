@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 type ChartItem = {
   label: string
@@ -9,6 +9,7 @@ type ResultsSectionProps = {
   isDark: boolean
   submitted: boolean
   displayedQuestion: string
+  isPresetQuestion: boolean
   chartItems: ChartItem[]
   advancedOpen: boolean
   onToggleAdvanced: () => void
@@ -31,11 +32,40 @@ const ADVANCED_FIELDS = [
 
 const BCB_CACHE_KEY = 'bcb-series-cache'
 const BCB_CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000
+const QUESTION_VALUE_REGEX = /\d[\d.]*([,]\d+)?/g
+
+type QuestionToken = { type: 'text'; value: string } | { type: 'value'; value: string }
+
+const splitQuestionTokens = (question: string): QuestionToken[] => {
+  if (!question) {
+    return []
+  }
+
+  const tokens: QuestionToken[] = []
+  QUESTION_VALUE_REGEX.lastIndex = 0
+  let lastIndex = 0
+  let match: RegExpExecArray | null
+
+  while ((match = QUESTION_VALUE_REGEX.exec(question)) !== null) {
+    if (match.index > lastIndex) {
+      tokens.push({ type: 'text', value: question.slice(lastIndex, match.index) })
+    }
+    tokens.push({ type: 'value', value: match[0] })
+    lastIndex = match.index + match[0].length
+  }
+
+  if (lastIndex < question.length) {
+    tokens.push({ type: 'text', value: question.slice(lastIndex) })
+  }
+
+  return tokens
+}
 
 function ResultsSection({
   isDark,
   submitted,
   displayedQuestion,
+  isPresetQuestion,
   chartItems,
   advancedOpen,
   onToggleAdvanced,
@@ -43,6 +73,22 @@ function ResultsSection({
   const [advancedValues, setAdvancedValues] = useState<Record<string, string>>(() =>
     Object.fromEntries(ADVANCED_FIELDS.map((field) => [field.id, field.defaultValue])),
   )
+  const questionTokens = useMemo(
+    () => (isPresetQuestion ? splitQuestionTokens(displayedQuestion) : []),
+    [displayedQuestion, isPresetQuestion],
+  )
+  const [questionValues, setQuestionValues] = useState<string[]>([])
+
+  useEffect(() => {
+    if (!isPresetQuestion) {
+      setQuestionValues([])
+      return
+    }
+    const values = questionTokens
+      .filter((token) => token.type === 'value')
+      .map((token) => token.value)
+    setQuestionValues(values)
+  }, [isPresetQuestion, questionTokens])
 
   useEffect(() => {
     const loadBcbSeries = async () => {
@@ -117,6 +163,46 @@ function ResultsSection({
     return null
   }
 
+  let valueIndex = -1
+  const questionContent = isPresetQuestion ? (
+    <span className="whitespace-pre-wrap">
+      {questionTokens.map((token, index) => {
+        if (token.type === 'text') {
+          return <span key={`text-${index}`}>{token.value}</span>
+        }
+
+        valueIndex += 1
+        const currentValue = questionValues[valueIndex] ?? token.value
+        const inputWidth = Math.max(currentValue.length, 20)
+
+        return (
+          <input
+            key={`value-${index}`}
+            type="text"
+            inputMode="decimal"
+            value={currentValue}
+            onChange={(event) => {
+              const nextValue = event.target.value
+              setQuestionValues((prev) => {
+                const updated = [...prev]
+                updated[valueIndex] = nextValue
+                return updated
+              })
+            }}
+            style={{ width: `${inputWidth}ch` }}
+            className={`mx-1 rounded-xl border px-2 py-1 text-center text-base font-semibold align-middle ${
+              isDark
+                ? 'border-white/10 bg-slate-950/60 text-emerald-100'
+                : 'border-emerald-200/70 bg-white text-emerald-900'
+            }`}
+          />
+        )
+      })}
+    </span>
+  ) : (
+    displayedQuestion
+  )
+
   return (
     <>
       <div className="absolute inset-x-0 top-24 flex flex-col items-center text-center transition-all duration-400 translate-y-0 opacity-100">
@@ -132,7 +218,7 @@ function ResultsSection({
             isDark ? 'text-slate-100' : 'text-slate-900'
           }`}
         >
-          {displayedQuestion}
+          {questionContent}
         </h2>
       </div>
 

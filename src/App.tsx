@@ -51,6 +51,9 @@ function App() {
   const [introDone, setIntroDone] = useState(false)
   const displayedQuestion =
     query.trim() || 'Qual seria o valor final do meu investimento?'
+  const isPresetQuestion = questionGroups.some((group) =>
+    group.questions.includes(query.trim()),
+  )
   const chartItems = [
     { label: 'CDB', value: 78 },
     { label: 'LCI', value: 64 },
@@ -62,6 +65,10 @@ function App() {
     setAdvancedOpen(false)
     setQuery('')
     setActiveGroupId('')
+  }
+  const handlePresetSelect = (question: string) => {
+    setQuery(question)
+    setSubmitted(true)
   }
 
   useEffect(() => {
@@ -141,6 +148,7 @@ function App() {
               isDark={isDark}
               submitted={submitted}
               displayedQuestion={displayedQuestion}
+              isPresetQuestion={isPresetQuestion}
               chartItems={chartItems}
               advancedOpen={advancedOpen}
               onToggleAdvanced={() => setAdvancedOpen((value) => !value)}
@@ -166,7 +174,7 @@ function App() {
                   questionGroups={questionGroups}
                   activeGroupId={activeGroupId}
                   onSelectGroup={setActiveGroupId}
-                  onSelectQuestion={setQuery}
+                  onSelectQuestion={handlePresetSelect}
                 />
               </QuestionInputCard>
             </div>
