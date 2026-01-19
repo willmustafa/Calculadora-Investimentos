@@ -1,18 +1,18 @@
-@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600&family=Space+Grotesk:wght@400;500;600&display=swap");
 @import "tailwindcss";
 
 :root {
-  font-family: "Space Grotesk", "Segoe UI", sans-serif;
+  font-family: "DejaVu Sans", "Segoe UI", sans-serif;
   color: #0f172a;
   background-color: #f8fafc;
 }
 
 body {
   margin: 0;
+  font-family: "DejaVu Sans", "Segoe UI", sans-serif;
 }
 
 .font-display {
-  font-family: "Fraunces", "Times New Roman", serif;
+  font-family: "DejaVu Sans", "Segoe UI", sans-serif;
 }
 
 .fade-in {

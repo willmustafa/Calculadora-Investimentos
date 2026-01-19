@@ -38,9 +38,9 @@ function QuestionInputCard({
     >
       <div className="flex justify-between items-center">
         <label
-            className={`text-[11px] font-semibold uppercase tracking-[0.32em] ${
+            className={`text-base font-semibold uppercase tracking-[0.2em] ${
                 isDark ? 'text-slate-400' : 'text-slate-500'
-            }`}
+            } ${submitted ? '' : 'w-full justify-center flex'}`}
         >
           O que você quer calcular?
         </label>

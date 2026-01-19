@@ -190,7 +190,7 @@ function ResultsSection({
               })
             }}
             style={{ width: `${inputWidth}ch` }}
-            className={`mx-1 rounded-xl border px-2 py-1 text-center text-base font-semibold align-middle ${
+            className={`mx-1 rounded-xl border px-2 py-1 text-center font-display text-2xl sm:text-3xl font-semibold align-middle ${
               isDark
                 ? 'border-white/10 bg-slate-950/60 text-emerald-100'
                 : 'border-emerald-200/70 bg-white text-emerald-900'
