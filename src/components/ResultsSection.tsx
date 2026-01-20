@@ -215,7 +215,7 @@ function ResultsSection({
           Pergunta enviada
         </p>
         <h2
-          className={`mt-4 text-balance font-display text-2xl sm:text-3xl ${
+          className={`mt-4 text-balance font-display text-2xl sm:text-3xl leading-12 ${
             isDark ? 'text-slate-100' : 'text-slate-900'
           }`}
         >
