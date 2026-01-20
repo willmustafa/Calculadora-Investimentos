@@ -172,8 +172,9 @@ function ResultsSection({
         }
 
         valueIndex += 1
-        const currentValue = questionValues[valueIndex] ?? token.value
-        const inputWidth = Math.max(currentValue.length, 20)
+        const currentValueIndex = valueIndex
+        const currentValue = questionValues[currentValueIndex] ?? token.value
+        const inputWidth = Math.max(currentValue.length * 1.25, 1)
 
         return (
           <input
@@ -185,11 +186,11 @@ function ResultsSection({
               const nextValue = event.target.value
               setQuestionValues((prev) => {
                 const updated = [...prev]
-                updated[valueIndex] = nextValue
+                updated[currentValueIndex] = nextValue
                 return updated
               })
             }}
-            style={{ width: `${inputWidth}ch` }}
+            style={{ width: `${inputWidth}ch`, minWidth: '10ch' }}
             className={`mx-1 rounded-xl border px-2 py-1 text-center font-display text-2xl sm:text-3xl font-semibold align-middle ${
               isDark
                 ? 'border-white/10 bg-slate-950/60 text-emerald-100'
@@ -204,8 +205,8 @@ function ResultsSection({
   )
 
   return (
-    <>
-      <div className="absolute inset-x-0 top-24 flex flex-col items-center text-center transition-all duration-400 translate-y-0 opacity-100">
+    <div className="absolute inset-x-0 top-24 transition-all duration-400 translate-y-0 opacity-100">
+      <div className="flex flex-col items-center text-center">
         <p
           className={`text-[11px] font-semibold uppercase tracking-[0.4em] ${
             isDark ? 'text-emerald-200/80' : 'text-emerald-700/80'
@@ -222,8 +223,7 @@ function ResultsSection({
         </h2>
       </div>
 
-      <div className="absolute inset-x-0 top-40 transition-all duration-400 translate-y-0 opacity-100">
-        <div className="mx-auto grid max-w-5xl gap-6 pt-16 sm:grid-cols-[1.1fr_0.9fr]">
+      <div className="mx-auto grid max-w-5xl gap-6 pt-16 sm:grid-cols-[1.1fr_0.9fr]">
           <div
             className={`rounded-[28px] border p-6 shadow-[0_24px_50px_rgba(15,23,42,0.2)] ${
               isDark ? 'border-white/10 bg-slate-900/70' : 'border-white/70 bg-white/80'
@@ -345,9 +345,8 @@ function ResultsSection({
               ))}
             </div>
           </div>
-        </div>
       </div>
-    </>
+    </div>
   )
 }
 
