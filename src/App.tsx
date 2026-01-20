@@ -10,9 +10,9 @@ const questionGroups = [
     label: 'Aplicação inicial única',
     description: 'Aporte único e rendimento no tempo.',
     questions: [
-      'Se eu aplicar R$ 15.000 hoje, quanto terei em 36 meses a 0,9% ao mês?',
-      'Quanto rende R$ 5.000 em 2 anos com 12% ao ano?',
-      'Qual o valor final de um aporte único de R$ 25.000 em 5 anos?',
+      'Se eu aplicar R$ 15.000 hoje, quanto terei em 36 meses?',
+      'Quanto eu preciso aplicar hoje para que eu tenha R$ 80.000 em 5 anos?',
+      'Por quanto tempo eu preciso deixar R$ 100.000 investidos para atingir R$ 120.000?',
     ],
   },
   {
@@ -20,9 +20,9 @@ const questionGroups = [
     label: 'Aplicação mensal',
     description: 'Aportes constantes ao longo do tempo.',
     questions: [
-      'Se eu investir R$ 600 por mês, quanto terei em 7 anos a 0,8% ao mês?',
-      'Quanto preciso aportar por mês para chegar a R$ 200.000 em 8 anos?',
-      'Se eu aportar R$ 1.200 por mês, qual o total em 10 anos?',
+      'Se eu investir R$ 50.000 e dar aportes mensais de R$ 1.000, quanto terei depois de 24 meses?',
+      'Quanto preciso aplicar mensalmente para conseguir R$ 8.000 em 12 meses?',
+      'Por quanto tempo preciso aplicar R$ 800 mensalmente para chegar ao meu objetivo de R$ 4.000?',
     ],
   },
   {
@@ -30,9 +30,8 @@ const questionGroups = [
     label: 'Retirada mensal (aposentadoria)',
     description: 'Quanto posso retirar mantendo o saldo.',
     questions: [
-      'Com R$ 400.000 investidos, quanto posso retirar por mês por 20 anos?',
-      'Qual saldo preciso para retirar R$ 4.000 por mês por 25 anos?',
-      'Se eu retirar R$ 2.500 por mês, quanto dura um saldo de R$ 300.000?',
+      'Se eu tiver R$ 1.000.000 investidos, por quanto tempo posso retirar dinheiro até zerar a conta em 10 anos?',
+      'Quanto eu preciso ter investido para retirar R$ 3.500 por mês por 25 anos?',
     ],
   },
 ]
