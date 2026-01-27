@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { questionGroups } from '../data/questionGroups'
 
 type ChartItem = {
   label: string
@@ -33,6 +34,42 @@ const ADVANCED_FIELDS = [
 const BCB_CACHE_KEY = 'bcb-series-cache'
 const BCB_CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000
 const QUESTION_VALUE_REGEX = /\d[\d.]*([,]\d+)?/g
+
+const FLAT_PRESET_QUESTIONS = questionGroups.flatMap((group) => group.questions)
+
+type CalculationResult = {
+  label: string
+  value: string
+}
+
+const parseNumberBR = (value: string): number => {
+  const normalized = value.replace(/\./g, '').replace(',', '.')
+  return Number(normalized)
+}
+
+const formatCurrency = (value: number): string =>
+  new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+    maximumFractionDigits: 2,
+  }).format(value)
+
+const formatDurationMonths = (months: number): string => {
+  if (!Number.isFinite(months) || months <= 0) {
+    return '—'
+  }
+  const rounded = Math.ceil(months)
+  const monthLabel = rounded === 1 ? 'mês' : 'meses'
+  if (rounded < 12) {
+    return `${rounded} ${monthLabel}`
+  }
+  const years = rounded / 12
+  const yearsLabel = years >= 1.5 ? 'anos' : 'ano'
+  const yearsFormatted = new Intl.NumberFormat('pt-BR', {
+    maximumFractionDigits: 1,
+  }).format(years)
+  return `${rounded} ${monthLabel} (~${yearsFormatted} ${yearsLabel})`
+}
 
 type QuestionToken = { type: 'text'; value: string } | { type: 'value'; value: string }
 
@@ -159,6 +196,147 @@ function ResultsSection({
     void loadBcbSeries()
   }, [])
 
+  const calculationResult = useMemo<CalculationResult>(() => {
+    const fallback: CalculationResult = {
+      label: 'Resultado estimado',
+      value: '—',
+    }
+
+    if (!isPresetQuestion) {
+      return fallback
+    }
+
+    const questionIndex = FLAT_PRESET_QUESTIONS.indexOf(displayedQuestion)
+    if (questionIndex === -1) {
+      return fallback
+    }
+
+    const parsedValues = questionValues.map(parseNumberBR)
+    const annualRate = parseNumberBR(advancedValues.rentabilidadeCdb ?? '0')
+    const monthlyRate =
+      Number.isFinite(annualRate) && annualRate > -100
+        ? Math.pow(1 + annualRate / 100, 1 / 12) - 1
+        : 0
+    const rate = Number.isFinite(monthlyRate) ? monthlyRate : 0
+
+    const futureValue = (pv: number, pmt: number, months: number) => {
+      if (rate === 0) {
+        return pv + pmt * months
+      }
+      const factor = Math.pow(1 + rate, months)
+      return pv * factor + pmt * ((factor - 1) / rate)
+    }
+
+    const presentValueFromPayment = (pmt: number, months: number) => {
+      if (rate === 0) {
+        return pmt * months
+      }
+      return pmt * ((1 - Math.pow(1 + rate, -months)) / rate)
+    }
+
+    const paymentFromPresentValue = (pv: number, months: number) => {
+      if (rate === 0) {
+        return pv / months
+      }
+      return (pv * rate) / (1 - Math.pow(1 + rate, -months))
+    }
+
+    switch (questionIndex) {
+      case 0: {
+        const [pv, months] = parsedValues
+        if (!Number.isFinite(pv) || !Number.isFinite(months)) {
+          return fallback
+        }
+        const fv = futureValue(pv, 0, months)
+        return { label: 'Valor final', value: formatCurrency(fv) }
+      }
+      case 1: {
+        const [fvTarget, years] = parsedValues
+        if (!Number.isFinite(fvTarget) || !Number.isFinite(years)) {
+          return fallback
+        }
+        const months = years * 12
+        const pv =
+          rate === 0 ? fvTarget : fvTarget / Math.pow(1 + rate, months)
+        return { label: 'Aplicação inicial', value: formatCurrency(pv) }
+      }
+      case 2: {
+        const [pv, fvTarget] = parsedValues
+        if (!Number.isFinite(pv) || !Number.isFinite(fvTarget)) {
+          return fallback
+        }
+        if (rate === 0) {
+          const months = fvTarget <= pv ? 0 : Number.NaN
+          return { label: 'Tempo estimado', value: formatDurationMonths(months) }
+        }
+        const months = Math.log(fvTarget / pv) / Math.log(1 + rate)
+        return { label: 'Tempo estimado', value: formatDurationMonths(months) }
+      }
+      case 3: {
+        const [pv, pmt, months] = parsedValues
+        if (!Number.isFinite(pv) || !Number.isFinite(pmt) || !Number.isFinite(months)) {
+          return fallback
+        }
+        const fv = futureValue(pv, pmt, months)
+        return { label: 'Valor final', value: formatCurrency(fv) }
+      }
+      case 4: {
+        const [fvTarget, months] = parsedValues
+        if (!Number.isFinite(fvTarget) || !Number.isFinite(months)) {
+          return fallback
+        }
+        if (months <= 0) {
+          return fallback
+        }
+        const pmt =
+          rate === 0
+            ? fvTarget / months
+            : (fvTarget * rate) / (Math.pow(1 + rate, months) - 1)
+        return { label: 'Aporte mensal', value: `${formatCurrency(pmt)} /mês` }
+      }
+      case 5: {
+        const [pmt, fvTarget] = parsedValues
+        if (!Number.isFinite(pmt) || !Number.isFinite(fvTarget)) {
+          return fallback
+        }
+        if (pmt <= 0) {
+          return fallback
+        }
+        const months =
+          rate === 0
+            ? fvTarget / pmt
+            : Math.log((fvTarget * rate) / pmt + 1) / Math.log(1 + rate)
+        return { label: 'Tempo estimado', value: formatDurationMonths(months) }
+      }
+      case 6: {
+        const [pv, years] = parsedValues
+        if (!Number.isFinite(pv) || !Number.isFinite(years)) {
+          return fallback
+        }
+        const months = years * 12
+        if (months <= 0) {
+          return fallback
+        }
+        const pmt = paymentFromPresentValue(pv, months)
+        return { label: 'Retirada mensal', value: `${formatCurrency(pmt)} /mês` }
+      }
+      case 7: {
+        const [pmt, years] = parsedValues
+        if (!Number.isFinite(pmt) || !Number.isFinite(years)) {
+          return fallback
+        }
+        const months = years * 12
+        if (months <= 0) {
+          return fallback
+        }
+        const pv = presentValueFromPayment(pmt, months)
+        return { label: 'Patrimônio inicial', value: formatCurrency(pv) }
+      }
+      default:
+        return fallback
+    }
+  }, [advancedValues, displayedQuestion, isPresetQuestion, questionValues])
+
   if (!submitted) {
     return null
   }
@@ -235,7 +413,7 @@ function ResultsSection({
                           isDark ? 'text-slate-400' : 'text-slate-500'
                       }`}
                   >
-                      Valor estimado
+                      {calculationResult.label}
                   </p>
                   <span
                       className={`rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] ${
@@ -255,7 +433,7 @@ function ResultsSection({
                     isDark ? 'text-emerald-200' : 'text-emerald-700'
                   }`}
                 >
-                  R$ 182.450
+                  {calculationResult.value}
                 </p>
                 <p className={`mt-2 text-sm ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
                   Resultado considerando reinvestimento e taxas atuais.
