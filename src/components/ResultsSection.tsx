@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { calculatePresetQuestionResult, type CalculationResult } from '../data/questionCalculations'
 import { questionGroups } from '../data/questionGroups'
 
 type ChartItem = {
@@ -34,41 +35,21 @@ const ADVANCED_FIELDS = [
 const BCB_CACHE_KEY = 'bcb-series-cache'
 const BCB_CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000
 const QUESTION_VALUE_REGEX = /\d[\d.]*([,]\d+)?/g
+const CDI_SERIES_ID = 12
 
 const FLAT_PRESET_QUESTIONS = questionGroups.flatMap((group) => group.questions)
 
-type CalculationResult = {
-  label: string
-  value: string
-}
-
 const parseNumberBR = (value: string): number => {
-  const normalized = value.replace(/\./g, '').replace(',', '.')
-  return Number(normalized)
-}
-
-const formatCurrency = (value: number): string =>
-  new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-    maximumFractionDigits: 2,
-  }).format(value)
-
-const formatDurationMonths = (months: number): string => {
-  if (!Number.isFinite(months) || months <= 0) {
-    return '—'
+  const cleaned = value.trim()
+  if (cleaned.includes(',')) {
+    const normalized = cleaned.replace(/\./g, '').replace(',', '.')
+    return Number(normalized)
   }
-  const rounded = Math.ceil(months)
-  const monthLabel = rounded === 1 ? 'mês' : 'meses'
-  if (rounded < 12) {
-    return `${rounded} ${monthLabel}`
+  if (/\.\d{3}(\.|$)/.test(cleaned)) {
+    const normalized = cleaned.replace(/\./g, '')
+    return Number(normalized)
   }
-  const years = rounded / 12
-  const yearsLabel = years >= 1.5 ? 'anos' : 'ano'
-  const yearsFormatted = new Intl.NumberFormat('pt-BR', {
-    maximumFractionDigits: 1,
-  }).format(years)
-  return `${rounded} ${monthLabel} (~${yearsFormatted} ${yearsLabel})`
+  return Number(cleaned.replace(',', '.'))
 }
 
 type QuestionToken = { type: 'text'; value: string } | { type: 'value'; value: string }
@@ -96,6 +77,24 @@ const splitQuestionTokens = (question: string): QuestionToken[] => {
   }
 
   return tokens
+}
+
+const formatBcbDate = (date: Date) => {
+  const day = String(date.getDate()).padStart(2, '0')
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const year = date.getFullYear()
+  return `${day}/${month}/${year}`
+}
+
+const calculateCdiAnnualFromDaily = (values: Array<{ valor?: string }>) => {
+  const valid = values
+    .map((item) => Number(item.valor?.replace(',', '.')))
+    .filter((value) => Number.isFinite(value))
+  if (valid.length === 0) {
+    return null
+  }
+  const factor = valid.reduce((acc, value) => acc * (1 + value / 100), 1)
+  return (factor - 1) * 100
 }
 
 function ResultsSection({
@@ -156,6 +155,26 @@ function ResultsSection({
 
         const responses = await Promise.all(
           fieldsFromBcb.map(async (field) => {
+            if (field.bcbSeriesId === CDI_SERIES_ID) {
+              const end = new Date()
+              const start = new Date(end)
+              start.setMonth(start.getMonth() - 12)
+              const response = await fetch(
+                `https://api.bcb.gov.br/dados/serie/bcdata.sgs.${field.bcbSeriesId}/dados?formato=json&dataInicial=${formatBcbDate(
+                  start,
+                )}&dataFinal=${formatBcbDate(end)}`,
+              )
+              if (!response.ok) {
+                throw new Error(`BCB ${field.bcbSeriesId} fetch failed`)
+              }
+              const data = (await response.json()) as Array<{ valor?: string }>
+              const annualRate = calculateCdiAnnualFromDaily(data)
+              if (annualRate === null || Number.isNaN(annualRate)) {
+                throw new Error(`BCB ${field.bcbSeriesId} invalid value`)
+              }
+              return { id: field.id, value: annualRate.toFixed(2) }
+            }
+
             const response = await fetch(
               `https://api.bcb.gov.br/dados/serie/bcdata.sgs.${field.bcbSeriesId}/dados/ultimos/1?formato=json`,
             )
@@ -219,122 +238,13 @@ function ResultsSection({
         : 0
     const rate = Number.isFinite(monthlyRate) ? monthlyRate : 0
 
-    const futureValue = (pv: number, pmt: number, months: number) => {
-      if (rate === 0) {
-        return pv + pmt * months
-      }
-      const factor = Math.pow(1 + rate, months)
-      return pv * factor + pmt * ((factor - 1) / rate)
-    }
+    const result = calculatePresetQuestionResult({
+      questionIndex,
+      values: parsedValues,
+      rate,
+    })
 
-    const presentValueFromPayment = (pmt: number, months: number) => {
-      if (rate === 0) {
-        return pmt * months
-      }
-      return pmt * ((1 - Math.pow(1 + rate, -months)) / rate)
-    }
-
-    const paymentFromPresentValue = (pv: number, months: number) => {
-      if (rate === 0) {
-        return pv / months
-      }
-      return (pv * rate) / (1 - Math.pow(1 + rate, -months))
-    }
-
-    switch (questionIndex) {
-      case 0: {
-        const [pv, months] = parsedValues
-        if (!Number.isFinite(pv) || !Number.isFinite(months)) {
-          return fallback
-        }
-        const fv = futureValue(pv, 0, months)
-        return { label: 'Valor final', value: formatCurrency(fv) }
-      }
-      case 1: {
-        const [fvTarget, years] = parsedValues
-        if (!Number.isFinite(fvTarget) || !Number.isFinite(years)) {
-          return fallback
-        }
-        const months = years * 12
-        const pv =
-          rate === 0 ? fvTarget : fvTarget / Math.pow(1 + rate, months)
-        return { label: 'Aplicação inicial', value: formatCurrency(pv) }
-      }
-      case 2: {
-        const [pv, fvTarget] = parsedValues
-        if (!Number.isFinite(pv) || !Number.isFinite(fvTarget)) {
-          return fallback
-        }
-        if (rate === 0) {
-          const months = fvTarget <= pv ? 0 : Number.NaN
-          return { label: 'Tempo estimado', value: formatDurationMonths(months) }
-        }
-        const months = Math.log(fvTarget / pv) / Math.log(1 + rate)
-        return { label: 'Tempo estimado', value: formatDurationMonths(months) }
-      }
-      case 3: {
-        const [pv, pmt, months] = parsedValues
-        if (!Number.isFinite(pv) || !Number.isFinite(pmt) || !Number.isFinite(months)) {
-          return fallback
-        }
-        const fv = futureValue(pv, pmt, months)
-        return { label: 'Valor final', value: formatCurrency(fv) }
-      }
-      case 4: {
-        const [fvTarget, months] = parsedValues
-        if (!Number.isFinite(fvTarget) || !Number.isFinite(months)) {
-          return fallback
-        }
-        if (months <= 0) {
-          return fallback
-        }
-        const pmt =
-          rate === 0
-            ? fvTarget / months
-            : (fvTarget * rate) / (Math.pow(1 + rate, months) - 1)
-        return { label: 'Aporte mensal', value: `${formatCurrency(pmt)} /mês` }
-      }
-      case 5: {
-        const [pmt, fvTarget] = parsedValues
-        if (!Number.isFinite(pmt) || !Number.isFinite(fvTarget)) {
-          return fallback
-        }
-        if (pmt <= 0) {
-          return fallback
-        }
-        const months =
-          rate === 0
-            ? fvTarget / pmt
-            : Math.log((fvTarget * rate) / pmt + 1) / Math.log(1 + rate)
-        return { label: 'Tempo estimado', value: formatDurationMonths(months) }
-      }
-      case 6: {
-        const [pv, years] = parsedValues
-        if (!Number.isFinite(pv) || !Number.isFinite(years)) {
-          return fallback
-        }
-        const months = years * 12
-        if (months <= 0) {
-          return fallback
-        }
-        const pmt = paymentFromPresentValue(pv, months)
-        return { label: 'Retirada mensal', value: `${formatCurrency(pmt)} /mês` }
-      }
-      case 7: {
-        const [pmt, years] = parsedValues
-        if (!Number.isFinite(pmt) || !Number.isFinite(years)) {
-          return fallback
-        }
-        const months = years * 12
-        if (months <= 0) {
-          return fallback
-        }
-        const pv = presentValueFromPayment(pmt, months)
-        return { label: 'Patrimônio inicial', value: formatCurrency(pv) }
-      }
-      default:
-        return fallback
-    }
+    return result ?? fallback
   }, [advancedValues, displayedQuestion, isPresetQuestion, questionValues])
 
   if (!submitted) {
